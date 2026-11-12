@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Christmas Tree</title>
+<style>
+  :root {
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    font-family: "Georgia", serif;
+    background: radial-gradient(ellipse at top, #0b1a2b 0%, #050a15 60%, #000 100%);
+    color: #fff;
+  }
+  .sky {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+  .star-bg {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: #fff;
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: twinkle 3s infinite ease-in-out;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 1; }
+  }
+  .snow {
+    position: absolute;
+    top: -10px;
+    color: #fff;
+    user-select: none;
+    pointer-events: none;
+    animation: fall linear infinite;
+    opacity: 0.9;
+  }
+  @keyframes fall {
+    0%   { transform: translateY(-10vh) translateX(0) rotate(0deg); }
+    100% { transform: translateY(110vh) translateX(40px) rotate(360deg); }
+  }
+
+  .scene {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding-bottom: 40px;
+  }
+
+  h1 {
+    position: absolute;
+    top: 24px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    margin: 0;
+    font-size: clamp(22px, 4vw, 36px);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #ffd27a;
+    text-shadow: 0 0 10px rgba(255, 210, 122, 0.6);
+  }
+
+  .tree {
+    position: relative;
+    width: 320px;
+    max-width: 90vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .layer {
+    width: 0;
+    height: 0;
+    border-left: solid transparent;
+    border-right: solid transparent;
+    border-bottom-style: solid;
+    margin-bottom: -30px;
+    position: relative;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
+  }
+  .layer.l1 {
+    border-left-width: 60px;
+    border-right-width: 60px;
+    border-bottom-width: 90px;
+    border-bottom-color: #1f7a3a;
+  }
+  .layer.l2 {
+    border-left-width: 85px;
+    border-right-width: 85px;
+    border-bottom-width: 110px;
+    border-bottom-color: #196632;
+  }
+  .layer.l3 {
+    border-left-width: 110px;
+    border-right-width: 110px;
+    border-bottom-width: 130px;
+    border-bottom-color: #14522a;
+  }
+  .layer.l4 {
+    border-left-width: 140px;
+    border-right-width: 140px;
+    border-bottom-width: 150px;
+    border-bottom-color: #0f4222;
+    margin-bottom: 0;
+  }
+
+  .trunk {
+    width: 40px;
+    height: 50px;
+    background: linear-gradient(#5a3418, #3a2110);
+    border-radius: 4px;
+    box-shadow: 0 6px 10px rgba(0,0,0,0.5);
+  }
+
+  .star {
+    position: absolute;
+    top: -34px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 40px;
+    color: #ffde5c;
+    text-shadow:
+      0 0 10px #ffde5c,
+      0 0 20px #ffb347,
+      0 0 30px #ff8c42;
+    animation: starGlow 2s ease-in-out infinite;
+    z-index: 5;
+  }
+  @keyframes starGlow {
+    0%, 100% { text-shadow: 0 0 10px #ffde5c, 0 0 20px #ffb347, 0 0 30px #ff8c42; }
+    50%      { text-shadow: 0 0 18px #ffde5c, 0 0 34px #ffb347, 0 0 50px #ff8c42; }
+  }
+
+  .ornament {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    box-shadow: inset -2px -2px 4px rgba(0,0,0,0.3), 0 0 8px currentColor;
+    animation: blink 2s infinite;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; filter: brightness(1); }
+    50%      { opacity: 0.6; filter: brightness(1.6); }
+  }
+
+  .gift {
+    position: absolute;
+    bottom: 40px;
+    width: 60px;
+    height: 45px;
+    border-radius: 4px;
+  }
+  .gift::before,
+  .gift::after {
+    content: "";
+    position: absolute;
+    background: #ffd700;
+  }
+  .gift::before {
+    left: 50%; top: 0; bottom: 0; width: 6px; transform: translateX(-50%);
+  }
+  .gift::after {
+    top: 50%; left: 0; right: 0; height: 6px; transform: translateY(-50%);
+  }
+  .gift.g1 { left: calc(50% - 110px); background: #c0392b; }
+  .gift.g2 { left: calc(50% - 40px); background: #2980b9; width: 70px; height: 50px; }
+  .gift.g3 { left: calc(50% + 40px); background: #8e44ad; width: 55px; height: 40px; }
+
+  .ground {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: linear-gradient(to top, #fff 0%, rgba(255,255,255,0.1) 100%);
+    opacity: 0.85;
+  }
+</style>
+</head>
+<body>
+  <div class="sky" id="sky"></div>
+
+  <div class="scene">
+    <h1>Merry Christmas</h1>
+
+    <div class="tree">
+      <div class="star">★</div>
+      <div class="layer l1"></div>
+      <div class="layer l2"></div>
+      <div class="layer l3"></div>
+      <div class="layer l4"></div>
+      <div class="trunk"></div>
+
+      <div class="gift g1"></div>
+      <div class="gift g2"></div>
+      <div class="gift g3"></div>
+    </div>
+  </div>
+
+  <div class="ground"></div>
+
+  <script>
+    const sky = document.getElementById('sky');
+    const colors = ['#ff4757', '#ffa502', '#ffde5c', '#2ed573', '#1e90ff', '#eccc68', '#ff6b81'];
+
+    for (let i = 0; i < 80; i++) {
+      const s = document.createElement('div');
+      s.className = 'star-bg';
+      s.style.left = Math.random() * 100 + 'vw';
+      s.style.top = Math.random() * 70 + 'vh';
+      s.style.animationDelay = (Math.random() * 3) + 's';
+      sky.appendChild(s);
+    }
+
+    for (let i = 0; i < 60; i++) {
+      const f = document.createElement('div');
+      f.className = 'snow';
+      f.textContent = '❄';
+      f.style.left = Math.random() * 100 + 'vw';
+      f.style.fontSize = (8 + Math.random() * 14) + 'px';
+      f.style.animationDuration = (5 + Math.random() * 8) + 's';
+      f.style.animationDelay = (Math.random() * 8) + 's';
+      sky.appendChild(f);
+    }
+
+    const tree = document.querySelector('.tree');
+    const positions = [
+      { top: 10,  left: 50 },
+      { top: 60,  left: 38 }, { top: 62, left: 62 },
+      { top: 110, left: 30 }, { top: 115, left: 50 }, { top: 112, left: 70 },
+      { top: 175, left: 22 }, { top: 180, left: 42 }, { top: 182, left: 58 }, { top: 178, left: 78 },
+      { top: 250, left: 15 }, { top: 255, left: 32 }, { top: 260, left: 50 }, { top: 258, left: 68 }, { top: 253, left: 85 },
+      { top: 340, left: 10 }, { top: 345, left: 28 }, { top: 348, left: 46 }, { top: 346, left: 64 }, { top: 342, left: 82 }, { top: 338, left: 92 }
+    ];
+
+    positions.forEach((p, i) => {
+      const o = document.createElement('div');
+      o.className = 'ornament';
+      o.style.top = p.top + 'px';
+      o.style.left = `calc(${p.left}% - 7px)`;
+      const c = colors[i % colors.length];
+      o.style.background = c;
+      o.style.color = c;
+      o.style.animationDelay = (Math.random() * 2) + 's';
+      tree.appendChild(o);
+    });
+  </script>
+</body>
+</html>
