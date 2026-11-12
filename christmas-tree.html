@@ -3,263 +3,375 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Christmas Tree</title>
+<title>ASCII Christmas Tree</title>
 <style>
-  :root {
-    color-scheme: dark;
-  }
-  * { box-sizing: border-box; }
+  :root { color-scheme: dark; }
   html, body {
     margin: 0;
     padding: 0;
+    width: 100%;
     height: 100%;
     overflow: hidden;
-    font-family: "Georgia", serif;
-    background: radial-gradient(ellipse at top, #0b1a2b 0%, #050a15 60%, #000 100%);
-    color: #fff;
+    background: #000010;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
   }
-  .sky {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
+  canvas {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(ellipse at center top, #0a1026 0%, #000010 70%, #000 100%);
   }
-  .star-bg {
-    position: absolute;
-    width: 2px;
-    height: 2px;
-    background: #fff;
-    border-radius: 50%;
-    opacity: 0.8;
-    animation: twinkle 3s infinite ease-in-out;
-  }
-  @keyframes twinkle {
-    0%, 100% { opacity: 0.2; }
-    50% { opacity: 1; }
-  }
-  .snow {
-    position: absolute;
-    top: -10px;
-    color: #fff;
-    user-select: none;
+  .hud {
+    position: fixed;
+    left: 12px;
+    bottom: 12px;
+    color: #9aa3b8;
+    font-size: 11px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
     pointer-events: none;
-    animation: fall linear infinite;
-    opacity: 0.9;
-  }
-  @keyframes fall {
-    0%   { transform: translateY(-10vh) translateX(0) rotate(0deg); }
-    100% { transform: translateY(110vh) translateX(40px) rotate(360deg); }
-  }
-
-  .scene {
-    position: relative;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    padding-bottom: 40px;
-  }
-
-  h1 {
-    position: absolute;
-    top: 24px;
-    left: 0;
-    right: 0;
-    text-align: center;
-    margin: 0;
-    font-size: clamp(22px, 4vw, 36px);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: #ffd27a;
-    text-shadow: 0 0 10px rgba(255, 210, 122, 0.6);
-  }
-
-  .tree {
-    position: relative;
-    width: 320px;
-    max-width: 90vw;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .layer {
-    width: 0;
-    height: 0;
-    border-left: solid transparent;
-    border-right: solid transparent;
-    border-bottom-style: solid;
-    margin-bottom: -30px;
-    position: relative;
-    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
-  }
-  .layer.l1 {
-    border-left-width: 60px;
-    border-right-width: 60px;
-    border-bottom-width: 90px;
-    border-bottom-color: #1f7a3a;
-  }
-  .layer.l2 {
-    border-left-width: 85px;
-    border-right-width: 85px;
-    border-bottom-width: 110px;
-    border-bottom-color: #196632;
-  }
-  .layer.l3 {
-    border-left-width: 110px;
-    border-right-width: 110px;
-    border-bottom-width: 130px;
-    border-bottom-color: #14522a;
-  }
-  .layer.l4 {
-    border-left-width: 140px;
-    border-right-width: 140px;
-    border-bottom-width: 150px;
-    border-bottom-color: #0f4222;
-    margin-bottom: 0;
-  }
-
-  .trunk {
-    width: 40px;
-    height: 50px;
-    background: linear-gradient(#5a3418, #3a2110);
-    border-radius: 4px;
-    box-shadow: 0 6px 10px rgba(0,0,0,0.5);
-  }
-
-  .star {
-    position: absolute;
-    top: -34px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 40px;
-    color: #ffde5c;
-    text-shadow:
-      0 0 10px #ffde5c,
-      0 0 20px #ffb347,
-      0 0 30px #ff8c42;
-    animation: starGlow 2s ease-in-out infinite;
-    z-index: 5;
-  }
-  @keyframes starGlow {
-    0%, 100% { text-shadow: 0 0 10px #ffde5c, 0 0 20px #ffb347, 0 0 30px #ff8c42; }
-    50%      { text-shadow: 0 0 18px #ffde5c, 0 0 34px #ffb347, 0 0 50px #ff8c42; }
-  }
-
-  .ornament {
-    position: absolute;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    box-shadow: inset -2px -2px 4px rgba(0,0,0,0.3), 0 0 8px currentColor;
-    animation: blink 2s infinite;
-  }
-  @keyframes blink {
-    0%, 100% { opacity: 1; filter: brightness(1); }
-    50%      { opacity: 0.6; filter: brightness(1.6); }
-  }
-
-  .gift {
-    position: absolute;
-    bottom: 40px;
-    width: 60px;
-    height: 45px;
-    border-radius: 4px;
-  }
-  .gift::before,
-  .gift::after {
-    content: "";
-    position: absolute;
-    background: #ffd700;
-  }
-  .gift::before {
-    left: 50%; top: 0; bottom: 0; width: 6px; transform: translateX(-50%);
-  }
-  .gift::after {
-    top: 50%; left: 0; right: 0; height: 6px; transform: translateY(-50%);
-  }
-  .gift.g1 { left: calc(50% - 110px); background: #c0392b; }
-  .gift.g2 { left: calc(50% - 40px); background: #2980b9; width: 70px; height: 50px; }
-  .gift.g3 { left: calc(50% + 40px); background: #8e44ad; width: 55px; height: 40px; }
-
-  .ground {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 80px;
-    background: linear-gradient(to top, #fff 0%, rgba(255,255,255,0.1) 100%);
+    letter-spacing: 0.5px;
     opacity: 0.85;
+  }
+  .hud .right {
+    position: fixed;
+    right: 12px;
+    bottom: 12px;
+    text-align: right;
   }
 </style>
 </head>
 <body>
-  <div class="sky" id="sky"></div>
+<canvas id="c"></canvas>
+<div class="hud">
+  <div id="hudL">agac.py</div>
+</div>
+<div class="hud right">
+  <div id="hudR">running · 30 fps</div>
+</div>
 
-  <div class="scene">
-    <h1>Merry Christmas</h1>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const hudL = document.getElementById('hudL');
+const hudR = document.getElementById('hudR');
 
-    <div class="tree">
-      <div class="star">★</div>
-      <div class="layer l1"></div>
-      <div class="layer l2"></div>
-      <div class="layer l3"></div>
-      <div class="layer l4"></div>
-      <div class="trunk"></div>
+let W, H;
+const CHAR_H = 12;
 
-      <div class="gift g1"></div>
-      <div class="gift g2"></div>
-      <div class="gift g3"></div>
-    </div>
-  </div>
+function resize() {
+  const dpr = window.devicePixelRatio || 1;
+  W = window.innerWidth;
+  H = window.innerHeight;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.font = `${CHAR_H}px "SF Mono", Menlo, Consolas, monospace`;
+  ctx.textBaseline = 'top';
+  ctx.textAlign = 'center';
+}
+window.addEventListener('resize', resize);
+resize();
 
-  <div class="ground"></div>
+// ---------- geometry ----------
+const H_TREE = 3.2;
+const R_BASE = 1.25;
 
-  <script>
-    const sky = document.getElementById('sky');
-    const colors = ['#ff4757', '#ffa502', '#ffde5c', '#2ed573', '#1e90ff', '#eccc68', '#ff6b81'];
+const points = [];
 
-    for (let i = 0; i < 80; i++) {
-      const s = document.createElement('div');
-      s.className = 'star-bg';
-      s.style.left = Math.random() * 100 + 'vw';
-      s.style.top = Math.random() * 70 + 'vh';
-      s.style.animationDelay = (Math.random() * 3) + 's';
-      sky.appendChild(s);
+// Foliage: dense cone, bottom-up reveal
+const foliageChars = ['%', '#', '*', 'o', '.', '+', ':', 'x'];
+const greens = ['#1a6b2e', '#217a36', '#2d8f3f', '#36a84a', '#124a20', '#165a28'];
+for (let i = 0; i < 5500; i++) {
+  const t = Math.pow(Math.random(), 0.6);
+  const y = t * H_TREE;
+  const taper = 1 - y / H_TREE;
+  const r = R_BASE * taper * (0.75 + Math.random() * 0.3);
+  const theta = Math.random() * Math.PI * 2;
+  const bumpy = 1 + 0.06 * Math.sin(y * 10 + theta * 5);
+  const x = r * bumpy * Math.cos(theta);
+  const z = r * bumpy * Math.sin(theta);
+  points.push({
+    x, y, z,
+    char: foliageChars[Math.floor(Math.random() * foliageChars.length)],
+    color: greens[Math.floor(Math.random() * greens.length)],
+    reveal: 0.1 + (1 - t) * 1.6,
+    layer: 0
+  });
+}
+
+// Trunk
+for (let i = 0; i < 350; i++) {
+  const y = -Math.random() * 0.35;
+  const theta = Math.random() * Math.PI * 2;
+  const r = 0.12 * (0.7 + Math.random() * 0.4);
+  const x = r * Math.cos(theta);
+  const z = r * Math.sin(theta);
+  const barks = ['#5a3418', '#6b4423', '#7a4e26', '#4a2a13'];
+  points.push({
+    x, y, z,
+    char: Math.random() < 0.5 ? '#' : '%',
+    color: barks[Math.floor(Math.random() * barks.length)],
+    reveal: 0.05,
+    layer: 0
+  });
+}
+
+// Garlands: golden spiral
+for (let i = 0; i < 280; i++) {
+  const t = i / 280;
+  const y = 0.15 + t * (H_TREE - 0.3);
+  const taper = 1 - y / H_TREE;
+  const r = R_BASE * taper * 1.02;
+  const theta = t * Math.PI * 9 + Math.sin(t * 20) * 0.2;
+  const x = r * Math.cos(theta);
+  const z = r * Math.sin(theta);
+  points.push({
+    x, y, z,
+    char: Math.random() < 0.7 ? 'o' : '*',
+    color: Math.random() < 0.6 ? '#ffd24a' : '#ffecb3',
+    reveal: 2.0 + (1 - t) * 1.2,
+    layer: 1,
+    blink: Math.random() * Math.PI * 2
+  });
+}
+
+// Ornaments (boules)
+const ornColors = ['#ff2d2d', '#e11818', '#ffd700', '#ff8c42', '#d63384', '#3fa5ff', '#b24cff'];
+for (let i = 0; i < 70; i++) {
+  const t = Math.pow(Math.random(), 0.7);
+  const y = 0.1 + t * (H_TREE - 0.4);
+  const taper = 1 - y / H_TREE;
+  const r = R_BASE * taper * (0.95 + Math.random() * 0.1);
+  const theta = Math.random() * Math.PI * 2;
+  const x = r * Math.cos(theta);
+  const z = r * Math.sin(theta);
+  points.push({
+    x, y, z,
+    char: 'O',
+    color: ornColors[Math.floor(Math.random() * ornColors.length)],
+    reveal: 3.8 + Math.random() * 1.0,
+    layer: 2,
+    blink: Math.random() * Math.PI * 2
+  });
+}
+
+// Star cluster at the top
+for (let i = 0; i < 35; i++) {
+  const theta = Math.random() * Math.PI * 2;
+  const rad = Math.random() * 0.18;
+  const x = Math.cos(theta) * rad;
+  const z = Math.sin(theta) * rad;
+  const y = H_TREE + 0.05 + Math.random() * 0.25;
+  points.push({
+    x, y, z,
+    char: Math.random() < 0.5 ? '@' : '*',
+    color: '#ffff66',
+    reveal: 5.2 + Math.random() * 0.3,
+    layer: 3,
+    glow: true
+  });
+}
+// Star rays
+for (let i = 0; i < 40; i++) {
+  const theta = (i / 40) * Math.PI * 2;
+  const rad = 0.2 + Math.random() * 0.25;
+  points.push({
+    x: Math.cos(theta) * rad * 0.3,
+    y: H_TREE + 0.2 + Math.sin(theta) * rad * 0.3,
+    z: Math.sin(theta) * rad * 0.3,
+    char: '.',
+    color: '#fff3a6',
+    reveal: 5.4,
+    layer: 3
+  });
+}
+
+// Gifts under the tree
+function gift(cx, cz, w, hGift, d, color, ribbon) {
+  for (let i = 0; i < 400; i++) {
+    const face = Math.random();
+    let x, y, z;
+    if (face < 0.33) {
+      // top
+      x = cx + (Math.random() - 0.5) * w;
+      y = -0.35 - hGift;
+      z = cz + (Math.random() - 0.5) * d;
+    } else if (face < 0.66) {
+      // front/back
+      x = cx + (Math.random() - 0.5) * w;
+      y = -0.35 - Math.random() * hGift;
+      z = cz + (Math.random() < 0.5 ? -d / 2 : d / 2);
+    } else {
+      // sides
+      x = cx + (Math.random() < 0.5 ? -w / 2 : w / 2);
+      y = -0.35 - Math.random() * hGift;
+      z = cz + (Math.random() - 0.5) * d;
     }
-
-    for (let i = 0; i < 60; i++) {
-      const f = document.createElement('div');
-      f.className = 'snow';
-      f.textContent = '❄';
-      f.style.left = Math.random() * 100 + 'vw';
-      f.style.fontSize = (8 + Math.random() * 14) + 'px';
-      f.style.animationDuration = (5 + Math.random() * 8) + 's';
-      f.style.animationDelay = (Math.random() * 8) + 's';
-      sky.appendChild(f);
-    }
-
-    const tree = document.querySelector('.tree');
-    const positions = [
-      { top: 10,  left: 50 },
-      { top: 60,  left: 38 }, { top: 62, left: 62 },
-      { top: 110, left: 30 }, { top: 115, left: 50 }, { top: 112, left: 70 },
-      { top: 175, left: 22 }, { top: 180, left: 42 }, { top: 182, left: 58 }, { top: 178, left: 78 },
-      { top: 250, left: 15 }, { top: 255, left: 32 }, { top: 260, left: 50 }, { top: 258, left: 68 }, { top: 253, left: 85 },
-      { top: 340, left: 10 }, { top: 345, left: 28 }, { top: 348, left: 46 }, { top: 346, left: 64 }, { top: 342, left: 82 }, { top: 338, left: 92 }
-    ];
-
-    positions.forEach((p, i) => {
-      const o = document.createElement('div');
-      o.className = 'ornament';
-      o.style.top = p.top + 'px';
-      o.style.left = `calc(${p.left}% - 7px)`;
-      const c = colors[i % colors.length];
-      o.style.background = c;
-      o.style.color = c;
-      o.style.animationDelay = (Math.random() * 2) + 's';
-      tree.appendChild(o);
+    points.push({
+      x, y, z,
+      char: Math.random() < 0.3 ? '#' : '%',
+      color,
+      reveal: 6.0 + Math.random() * 0.6,
+      layer: 4
     });
-  </script>
+  }
+  // ribbon crosses
+  for (let i = 0; i < 60; i++) {
+    const t = i / 60;
+    // ribbon on top horizontal
+    points.push({
+      x: cx + (t - 0.5) * w,
+      y: -0.35 - hGift - 0.01,
+      z: cz,
+      char: '+',
+      color: ribbon,
+      reveal: 6.2,
+      layer: 4
+    });
+    points.push({
+      x: cx,
+      y: -0.35 - hGift - 0.01,
+      z: cz + (t - 0.5) * d,
+      char: '+',
+      color: ribbon,
+      reveal: 6.2,
+      layer: 4
+    });
+  }
+}
+gift(0.9, 0.1, 0.55, 0.4, 0.5, '#d61e1e', '#ffd24a');
+gift(-0.85, -0.05, 0.6, 0.35, 0.55, '#f5c518', '#d61e1e');
+gift(0.05, -0.9, 0.5, 0.3, 0.45, '#2a6fdb', '#ffffff');
+gift(-0.1, 0.9, 0.45, 0.25, 0.4, '#9b1cae', '#ffd24a');
+
+// Ground
+for (let i = 0; i < 1200; i++) {
+  const theta = Math.random() * Math.PI * 2;
+  const r = 1.3 + Math.random() * 2.2;
+  points.push({
+    x: Math.cos(theta) * r,
+    y: -0.35 - Math.random() * 0.02,
+    z: Math.sin(theta) * r,
+    char: Math.random() < 0.5 ? ':' : (Math.random() < 0.5 ? '.' : '+'),
+    color: '#9aa3b8',
+    reveal: 0,
+    layer: -1,
+    noRotate: false
+  });
+}
+
+// Background stars
+const bgStars = [];
+for (let i = 0; i < 260; i++) {
+  bgStars.push({
+    x: Math.random(),
+    y: Math.random() * 0.75,
+    char: Math.random() < 0.5 ? '.' : ',',
+    phase: Math.random() * Math.PI * 2,
+    base: 0.3 + Math.random() * 0.6
+  });
+}
+
+// Snow particles
+const snow = [];
+for (let i = 0; i < 280; i++) {
+  snow.push({
+    x: Math.random(),
+    y: Math.random(),
+    speed: 0.02 + Math.random() * 0.08,
+    sway: 0.002 + Math.random() * 0.008,
+    phase: Math.random() * Math.PI * 2,
+    char: Math.random() < 0.3 ? '*' : (Math.random() < 0.6 ? '.' : '•'),
+    size: Math.random() < 0.3 ? 14 : 11
+  });
+}
+
+// ---------- render ----------
+const start = performance.now();
+let frameCount = 0;
+let fpsTime = start;
+let fps = 30;
+
+function render(now) {
+  const t = (now - start) / 1000;
+  const angle = t * 0.45;
+  const cosA = Math.cos(angle);
+  const sinA = Math.sin(angle);
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Background stars
+  ctx.font = `${CHAR_H}px "SF Mono", Menlo, Consolas, monospace`;
+  for (const s of bgStars) {
+    const alpha = s.base * (0.4 + 0.6 * Math.sin(t * 2 + s.phase));
+    ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+    ctx.fillText(s.char, s.x * W, s.y * H);
+  }
+
+  // Project tree points
+  const scale = Math.min(W, H) * 0.19;
+  const cx = W / 2;
+  const cy = H * 0.65;
+
+  const visible = [];
+  for (const p of points) {
+    if (t < p.reveal) continue;
+    const rx = p.x * cosA - p.z * sinA;
+    const rz = p.x * sinA + p.z * cosA;
+    const sx = cx + rx * scale;
+    const sy = cy - p.y * scale;
+    visible.push({ sx, sy, z: rz, p });
+  }
+  visible.sort((a, b) => a.z - b.z);
+
+  for (const v of visible) {
+    let color = v.p.color;
+    if (v.p.blink !== undefined) {
+      const b = 0.6 + 0.4 * Math.sin(t * 3 + v.p.blink);
+      // darken/brighten
+      ctx.globalAlpha = b;
+    } else if (v.p.glow) {
+      ctx.globalAlpha = 0.7 + 0.3 * Math.sin(t * 4);
+    } else {
+      ctx.globalAlpha = 1;
+    }
+    // depth fade (back = darker)
+    const depth = (v.z + R_BASE) / (R_BASE * 2);
+    const fade = 0.55 + 0.45 * depth;
+    ctx.globalAlpha *= fade;
+    ctx.fillStyle = color;
+    ctx.fillText(v.p.char, v.sx, v.sy);
+  }
+  ctx.globalAlpha = 1;
+
+  // Snow (overlay)
+  for (const f of snow) {
+    f.y += f.speed * 0.01;
+    if (f.y > 1.05) { f.y = -0.05; f.x = Math.random(); }
+    const sway = Math.sin(t * 1.2 + f.phase) * 0.015;
+    const px = (f.x + sway) * W;
+    const py = f.y * H;
+    ctx.font = `${f.size}px "SF Mono", Menlo, Consolas, monospace`;
+    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+    ctx.fillText(f.char, px, py);
+  }
+
+  // HUD counters
+  frameCount++;
+  if (now - fpsTime > 500) {
+    fps = Math.round((frameCount * 1000) / (now - fpsTime));
+    frameCount = 0;
+    fpsTime = now;
+    const lights = Math.min(170, Math.floor(t * 40));
+    hudL.textContent = `agac.py   rotation ${(angle * 57.3 % 360).toFixed(2)}°   lights ${lights}`;
+    hudR.textContent = `running · ${fps} fps   emitters 8,486`;
+  }
+
+  requestAnimationFrame(render);
+}
+requestAnimationFrame(render);
+</script>
 </body>
 </html>
